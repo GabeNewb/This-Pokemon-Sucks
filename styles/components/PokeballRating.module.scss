@@ -1,0 +1,71 @@
+.pokeball {
+	background: #fff;
+	border: 5px solid #000;
+	border-radius: 50%;
+	box-shadow: inset -5px 5px 0 2px #ccc;
+	float: right;
+	height: 100px;
+	margin-right: -5px;
+	overflow: hidden;
+	position: relative;
+	width: 100px;
+
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		width: 100%;
+	}
+
+	&::before {
+		background: red;
+		height: 50%;
+	}
+
+	&::after {
+		height: 8px;
+		background: #000;
+		top: calc(50% - 3px);
+	}
+
+	.container {
+		background: lightgray;
+		border: 4px solid;
+		border-radius: 50%;
+		box-shadow: 0 0 0 5px black;
+		height: 45px;
+		left: calc(50% - 23px);
+		position: absolute;
+		top: calc(50% - 21px);
+		width: 45px;
+		z-index: 10;
+
+		&.poor {
+			border-color: red;
+		}
+
+		&.ok {
+			border-color: yellow;
+		}
+
+		&.good {
+			border-color: greenyellow;
+		}
+
+		&.excellent {
+			border-color: blue;
+		}
+	}
+
+	.rating {
+		font-size: 1.75em;
+		margin-top: -1px;
+		margin-left: 3px;
+		position: absolute;
+
+		&.single-digit-shift {
+			margin-left: 11px;
+			position: absolute;
+		}
+	}
+}

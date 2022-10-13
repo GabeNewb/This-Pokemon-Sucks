@@ -1,0 +1,19 @@
+.ant-card-extra {
+	display: flex;
+	flex-direction: row-reverse;
+	width: 3em;
+}
+
+.ant-card-head {
+	background-color: #fff;
+	border-bottom: 1px solid slategray;
+}
+
+.ant-typography {
+	width: fit-content;
+}
+
+.ant-typography + h3.ant-typography,
+.ant-typography + h4.ant-typography {
+	margin-top: 0;
+}

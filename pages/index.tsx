@@ -1,77 +1,74 @@
-import Head from 'next/head'
-import InfiniteScroll from "react-infinite-scroll-component";
-import { loadPokemon } from 'lib/loadPokemon';
-import type { NextPage } from 'next'
-import { Pokemon } from '@types';
-import { PokemonThumbnail } from '../components/pokemonThumbnail';
-import styles from '@styles/Home.module.css'
-import { COPY, NUMBERS } from '@constants';
-import { useCallback, useEffect, useState } from 'react';
+import { capitalize } from '@lib';
+import { COPY } from '@constants';
+import { getAllReviewsHome } from 'lib/api-calls/datoCMS';
+import Head from 'next/head';
+import { loadAllPokemon } from 'lib/loadPokemon';
+import type { NextPage } from 'next';
+import { PokemonCard } from '@components';
+import styles from '@styles/pages/Home.module.scss';
+import { Typography } from 'antd';
+import { useMemo } from 'react';
+import { Pokemon, Review } from '@types';
+
+const { Title } = Typography;
 
 export async function getStaticProps(): Promise<{
-		props: {
-			nextBulkPokemonUrl: string;
-			pokeMap: Array<Pokemon>;
-		}
+	props: {
+		pokeMap: Array<Pokemon>;
+		datoCMSProps: Array<Review>;
+	};
 }> {
-	const props = await loadPokemon();
+	const datoCMSProps = await getAllReviewsHome(false);
+	const pokeMap = await loadAllPokemon();
 
-    return { props };
+	return { props: {
+		datoCMSProps,
+		pokeMap
+	} };
 }
 
 const Home: NextPage<{
-	nextBulkPokemonUrl: string;
-	pokeMap: Array<Pokemon>; 
-}> = ({ nextBulkPokemonUrl, pokeMap }) => {
-	const [ pokemonArray, setPokemonArray ] = useState<Array<Pokemon>>(pokeMap);
-	const [ bulkPokemonUrl, setBulkPokemonUrl ] = useState(nextBulkPokemonUrl);
-	const [ hasMorePokemon, setHasMorePokemon ] = useState(pokemonArray.length < 151);
+	datoCMSProps: Array<Review>;
+	pokeMap: Array<Pokemon>;
+}> = ({ datoCMSProps, pokeMap }) => {
+	const pokeLookup: Record<string, Review> = useMemo(
+		() =>
+			datoCMSProps.reduce((map: Record<string, Review>, review: Review) => {
+				map[ review.pokemon.name ] = review;
 
-	useEffect(() => {
-		const pokemonArrayLength = pokemonArray.length;
-		if (pokemonArrayLength > NUMBERS.KANTO_MAX) {
-			setHasMorePokemon(pokemonArray.length < NUMBERS.KANTO_MAX);
-			setPokemonArray(pokemonArray.slice(0, NUMBERS.KANTO_MAX));
-		}
-	}, [ pokemonArray ]);
+				return map;
+			}, {}),
+		[ datoCMSProps ]
+	);
 
-	const loadMorePokemon = useCallback(async() => {
-		const {
-			pokeMap: loadedPokemon,
-			nextBulkPokemonUrl: nextPokemonUrl
-		} = await loadPokemon(bulkPokemonUrl);
-	
-		setPokemonArray(() => [ ...pokemonArray, ...loadedPokemon ])
-		setBulkPokemonUrl(nextPokemonUrl);
-	}, [ bulkPokemonUrl, pokemonArray ]);
-	
 	return (
-		<div>
+		<div className={ styles.container }>
 			<Head>
-				<title>{COPY.TITLE}</title>
+				<title>{ COPY.TITLE }</title>
 			</Head>
 
-			<main className={ styles.main }>
-				<header className={ styles.title }>
-					<p>{ COPY.DESCRIPTION }</p>
+			<main>
+				<header className={ styles.header }>
+					<Title className={ styles.title } level={ 1 }>{ COPY.THIS_POKEMON_SUCKS }</Title>
+					<Title className={ styles.description } level={ 3 }>{ COPY.DESCRIPTION }</Title>
+					<Title className={ styles.about } level={ 4 } type='secondary'>{ COPY.ABOUT_TEXT }</Title>
 				</header>
 
-				<section>
-					<InfiniteScroll
-						className={styles.wrapper}
-						dataLength={ pokemonArray.length }
-						next={ loadMorePokemon }
-						hasMore={ hasMorePokemon }
-						loader={ <h3> Loading...</h3> }
-						endMessage={ <h4>Nothing more to show</h4> }>
-						{
-							pokemonArray.map((pokemon) => <PokemonThumbnail key= { pokemon.id } pokemon={ pokemon } />)
+				<section className={styles.wrapper }>
+					{pokeMap.map((pokemon) => {
+						const { id, name } = pokemon;
+						if (id > 150) {
+							return null;
 						}
-					</InfiniteScroll>
+
+						const review = pokeLookup[ capitalize(name) ];
+
+						return <PokemonCard key={ pokemon.id } review={ review } pokemon={ pokemon } />;
+					})}
 				</section>
 			</main>
 		</div>
 	);
-}
+};
 
-export default Home
+export default Home;

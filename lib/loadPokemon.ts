@@ -1,34 +1,59 @@
-import { Pokemon } from "@types";
-import { getNamedPokemon, getPokemon } from "./api-calls";
+import { capitalize } from './string';
+import {
+	BasicPokeApiPokemon,
+	DetailedPokeApiPokemon,
+	Pokemon,
+	PokemonResultsPagination,
+	TypeToColorString
+} from '@types';
+import { getPokemon, PokemonSearchRequest } from './api-calls';
 
-export async function loadPokemon(url?: string): Promise<{
-    nextBulkPokemonUrl: string;
-    pokeMap: Array<Pokemon>
-}> {
-    const pokemonBaseResponse = await getPokemon({url});
+const formatPokemon = (pokemon: DetailedPokeApiPokemon): Pokemon => {
+	const { id, name, sprites, types } = pokemon;
 
-    const pokeMap = [];
+	const colors = types.map((type) => type.type.name);
+	const typeOne = capitalize(colors[ 0 ]);
+	const primary = TypeToColorString[ typeOne as keyof typeof TypeToColorString ];
+	const typeTwo = colors.length > 1 ? capitalize(colors[ 1 ]) : capitalize(colors[ 0 ]);
+	const secondary = TypeToColorString[ typeTwo as keyof typeof TypeToColorString ];
 
-    for (const pokeResult of pokemonBaseResponse.results) {
-        const pokemon = await getNamedPokemon({url: pokeResult.url});
+	const formattedPokemon: Pokemon = {
+		id,
+		name,
+		sprite: sprites.front_default,
+		types: {
+			primary,
+			secondary
+		}
+	};
 
-        const {id, name, sprites} = pokemon;
+	return formattedPokemon;
+};
 
-        const formattedPokemon: Pokemon = {
-            id,
-            name,
-            sprite: sprites.front_default
-        }
+export async function loadSinglePokemon(request: PokemonSearchRequest): Promise<Pokemon> {
+	const { name, url } = request;
+	const pokemonBaseResponse = await getPokemon<DetailedPokeApiPokemon>({
+		name: name,
+		url
+	});
 
-        pokeMap.push(formattedPokemon);
-    };
+	const formattedPokemon = formatPokemon(pokemonBaseResponse);
 
-    const pokeApiReturns = {
-        nextBulkPokemonUrl: pokemonBaseResponse.next,
-        pokeMap
-    };
-
-    return pokeApiReturns;
+	return formattedPokemon;
 }
 
-  
+export async function loadAllPokemon(url?: string): Promise<Array<Pokemon>> {
+	const pokemonBaseResponse = await getPokemon<PokemonResultsPagination<BasicPokeApiPokemon>>({
+		url
+	});
+
+	const pokeMap = [];
+
+	for (const pokeResult of pokemonBaseResponse.results) {
+		const pokemon = await loadSinglePokemon({ url: pokeResult.url });
+
+		pokeMap.push(pokemon);
+	}
+
+	return pokeMap;
+}

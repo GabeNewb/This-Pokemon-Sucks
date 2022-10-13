@@ -1,2 +1,2 @@
+export * from './datoCMS';
 export * from './getPokemon';
-export * from './getNamedPokemon';

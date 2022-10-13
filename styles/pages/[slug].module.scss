@@ -1,0 +1,56 @@
+@keyframes fade-in {
+	from {
+		background-color: rgba(255, 255, 255, 0.8);
+	}
+	to {
+		background-color: rgba(255, 255, 255, 0.95);
+	}
+}
+
+.container {
+	animation: fade-in 1s ease-in;
+	background-color: rgba(255, 255, 255, 0.95);
+	height: 100%;
+	width: 100%;
+
+	.header {
+		font-size: 12px;
+		height: 4em;
+
+		.back {
+			font-size: 24px;
+			margin-top: 0.5em;
+			margin-left: 0.5em;
+		}
+
+		.label {
+			font-size: 14px;
+			margin-top: 0.8em;
+			margin-right: 1em;
+		}
+	}
+
+	.titleRow {
+		margin: auto;
+		padding-bottom: 0.5em;
+		width: fit-content;
+	}
+
+	.title {
+		margin: auto !important;
+		max-width: 15em;
+		min-width: 10em;
+	}
+
+	.cover {
+		border: 2px solid black;
+		margin: 0 auto;
+		z-index: 2;
+	}
+
+	.review {
+		font-size: 18px;
+		max-width: 45em;
+		margin: 2em auto;
+	}
+}

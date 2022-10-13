@@ -1,4 +1,3 @@
 export const NUMBERS = {
-    KANTO_MAX: 151,
-    POKEMON_LIMIT_PER_REQUEST: 32
-}
+	KANTO_MAX: 151
+};

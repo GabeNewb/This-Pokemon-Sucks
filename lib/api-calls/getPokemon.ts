@@ -1,14 +1,16 @@
-import { NUMBERS } from "@constants";
-import { BasicPokeApiPokemon, PokemonResultsPagination } from "@types";
+import { NUMBERS, UTILITY } from '@constants';
 
-export type PokemonSearchRequest = {url?: string;}
+export type PokemonSearchRequest = {
+	name?: string;
+	url?: string;
+};
 
-export async function getPokemon(request: PokemonSearchRequest): Promise<PokemonResultsPagination<BasicPokeApiPokemon>> {
-    const { url } = request; 
-    const pokeApiUrl = url ? url : `https://pokeapi.co/api/v2/pokemon/?limit=${NUMBERS.KANTO_MAX}`;
-    
+export async function getPokemon<T>(request: PokemonSearchRequest): Promise<T> {
+	const { name = '', url } = request;
+	const pokeApiUrl = url ? url : UTILITY.POKE_API(name.toLowerCase(), NUMBERS.KANTO_MAX);
+
 	const result = await fetch(pokeApiUrl);
-    const resultObject = await result.json() as PokemonResultsPagination<BasicPokeApiPokemon>;
+	const resultObject = (await result.json()) as T;
 
 	return resultObject;
 }
