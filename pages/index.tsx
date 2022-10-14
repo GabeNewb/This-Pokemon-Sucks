@@ -44,7 +44,7 @@ const Home: NextPage<{
 	return (
 		<div className={ styles.container }>
 			<Head>
-				<title>{ COPY.TITLE }</title>
+				<title>{ COPY.THIS_POKEMON_SUCKS }</title>
 			</Head>
 
 			<main>
@@ -54,7 +54,7 @@ const Home: NextPage<{
 					<Title className={ styles.about } level={ 4 } type='secondary'>{ COPY.ABOUT_TEXT }</Title>
 				</header>
 
-				<section className={styles.wrapper }>
+				<section className={ styles.wrapper }>
 					{pokeMap.map((pokemon) => {
 						const { id, name } = pokemon;
 						if (id > 150) {

@@ -1,8 +1,8 @@
-import { TypeToColorString } from './pokeApiReturns';
+import { PokemonTypeToColor } from '.';
 
 export interface PokemonColors {
-    primary: TypeToColorString;
-    secondary: TypeToColorString;
+    primary: PokemonTypeToColor;
+    secondary: PokemonTypeToColor;
 }
 
 export interface Pokemon {

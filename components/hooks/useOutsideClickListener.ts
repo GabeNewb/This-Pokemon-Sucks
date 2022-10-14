@@ -1,8 +1,8 @@
 import { RefObject, useEffect } from 'react';
 
 export const useOutsideClickListener = <T extends HTMLElement = HTMLElement>(
-	setPathAway: (pathAway: boolean) => void,
-	ref: RefObject<T>
+	ref: RefObject<T>,
+	setPathAway: (pathAway: boolean) => void
 ) => {
 	useEffect(() => {
 		const listener = (event: MouseEvent | TouchEvent) => {

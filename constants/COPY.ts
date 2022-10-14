@@ -6,6 +6,5 @@ export const COPY = {
 	POKEMON_IMAGE_HELP_TEXT: (name: string) => `image of the Pokemon ${name}`,
 	POKEMON_REVIEW: 'Pokemon Review',
 	REVIEWED_BY: 'Reviewed By:',
-	THIS_POKEMON_SUCKS: 'This Pokemon Sucks',
-	TITLE: 'This Pokemon Sucks: Barely thought out Pokemon reviews'
+	THIS_POKEMON_SUCKS: 'This Pokemon Sucks'
 };

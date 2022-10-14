@@ -23,13 +23,13 @@
 	}
 
 	&::after {
-		height: 8px;
 		background: #000;
+		height: 8px;
 		top: calc(50% - 3px);
 	}
 
 	.container {
-		background: lightgray;
+		background: #fff;
 		border: 4px solid;
 		border-radius: 50%;
 		box-shadow: 0 0 0 5px black;

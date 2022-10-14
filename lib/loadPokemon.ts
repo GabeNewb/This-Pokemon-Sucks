@@ -4,7 +4,7 @@ import {
 	DetailedPokeApiPokemon,
 	Pokemon,
 	PokemonResultsPagination,
-	TypeToColorString
+	PokemonTypeToColor
 } from '@types';
 import { getPokemon, PokemonSearchRequest } from './api-calls';
 
@@ -13,9 +13,9 @@ const formatPokemon = (pokemon: DetailedPokeApiPokemon): Pokemon => {
 
 	const colors = types.map((type) => type.type.name);
 	const typeOne = capitalize(colors[ 0 ]);
-	const primary = TypeToColorString[ typeOne as keyof typeof TypeToColorString ];
+	const primary = PokemonTypeToColor[ typeOne as keyof typeof PokemonTypeToColor ];
 	const typeTwo = colors.length > 1 ? capitalize(colors[ 1 ]) : capitalize(colors[ 0 ]);
-	const secondary = TypeToColorString[ typeTwo as keyof typeof TypeToColorString ];
+	const secondary = PokemonTypeToColor[ typeTwo as keyof typeof PokemonTypeToColor ];
 
 	const formattedPokemon: Pokemon = {
 		id,

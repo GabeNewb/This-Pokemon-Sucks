@@ -14,7 +14,10 @@ export interface Review {
 	date: string;
 	excerpt: string;
 	id: string;
-	pokemon: { name: string; picture: ResponsiveImageType };
+	pokemon: {
+		name: string;
+		picture: ResponsiveImageType
+	};
 	rating: number;
 	slug: string;
 	title: string;

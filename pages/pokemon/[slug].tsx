@@ -1,13 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { COPY } from '@constants';
-import { markdownToHtml } from 'lib/markdownToHtml';
 import { ParsedUrlQuery } from 'querystring';
 import styles from '@styles/pages/[slug].module.scss';
 import { useOutsideClickListener } from 'components/hooks';
 import { useRouter } from 'next/router';
 import { Avatar, ReviewBox, StyledDatoCMSImage } from '@components';
-import { getAllReviewsWithSlugs, getReview, loadSinglePokemon } from '@lib';
+import { getAllReviewsWithSlugs, getReview, loadSinglePokemon, markdownToHtml } from '@lib';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { Pokemon, Review } from '@types';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -56,7 +55,7 @@ const Pokemon: NextPage<{
 	pokeApiPokemon: Pokemon;
 	preview: boolean;
 	review: Review;
-}> = ({ pokeApiPokemon, preview, review }) => {
+}> = ({ pokeApiPokemon, review }) => {
 	const router = useRouter();
 	const [ routeAway, setRouteAway ] = useState(false);
 	const ref = React.useRef<HTMLDivElement>(null);
@@ -76,7 +75,7 @@ const Pokemon: NextPage<{
 	}, [ handleOnClick, routeAway ]);
 
 
-	useOutsideClickListener(setRouteAway, ref);
+	useOutsideClickListener(ref, setRouteAway);
 
 	if (!review) {
 		handleOnClick();
@@ -88,8 +87,6 @@ const Pokemon: NextPage<{
 	const { name, picture: authorImage } = author;
 	const { types } = pokeApiPokemon;
 	const { primary, secondary } = types;
-
-	console.log(preview);
 
 	return (
 		<div className={ styles.container } ref={ ref }>
@@ -105,13 +102,15 @@ const Pokemon: NextPage<{
 				<Avatar name={ name } authorImage={ authorImage.responsiveImage } />
 			</Row>
 
+			<hr />
+
 			<StyledDatoCMSImage
 				className={ styles.cover }
-				data={cover.responsiveImage }
+				data={ cover.responsiveImage }
 				primary={ primary }
 				secondary={ secondary }/>
 
-			<div className={ styles.review } dangerouslySetInnerHTML={{ __html: content }} />
+			<div className={ styles.review } dangerouslySetInnerHTML={ { __html: content } } />
 
 			<ReviewBox excerpt={ excerpt } rating={ rating } />
 		</div>

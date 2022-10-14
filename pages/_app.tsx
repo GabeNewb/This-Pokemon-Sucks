@@ -8,11 +8,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<div className='app-container'>
 			<Image
-				alt='decorative map of Kanto'
+				alt='decorative map of the Kanto region of Pokemon'
 				className='background'
 				layout='fill'
 				objectFit='cover'
-				quality={100}
+				quality={ 100 }
 				src='/images/wallpaper.jpg' />
 			<div className='page-container'>
 				<Component { ...pageProps } />
